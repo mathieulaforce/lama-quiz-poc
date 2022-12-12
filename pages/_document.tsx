@@ -1,6 +1,7 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import createEmotionServer from "@emotion/server/create-instance";
 import createEmotionCache from "../theme/createEmotionCache";
+import { AppType } from "next/app";
 
 
 export default class MyDocument extends Document<{ emotionStyleTags: any }> {
@@ -27,7 +28,7 @@ MyDocument.getInitialProps = async (ctx) => {
 
     ctx.renderPage = () =>
         originalRenderPage({
-            enhanceApp: (App) =>
+            enhanceApp: (App: any) =>
                 function EnhanceApp(props) {
                     return <App emotionCache={cache} {...props} />;
                 },
