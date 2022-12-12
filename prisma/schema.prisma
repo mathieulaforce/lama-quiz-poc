@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Language {
+  id    Int     @id @default(autoincrement())
+  culture String
+  iconUrl String
+  displayText String
+  quiz Quiz[]
+  isSoftDelete Boolean @default(false)
+}
+
+model Quiz {
+  id    Int     @id @default(autoincrement())
+  title String  @unique
+  slug String  @unique
+  description  String?
+  questions Question[]
+  language Language @relation(fields: [languageId], references: [id])
+  languageId  Int
+  isSoftDelete Boolean @default(false)
+}
+
+model Question {
+  id        Int     @id @default(autoincrement())
+  question     String
+  extraDescription   String?
+  isMultipleChoise Boolean @default(false)
+  options QuestionOption[]
+  answers QuestionAnswer[]
+  quiz    Quiz    @relation(fields: [quizId], references: [id])
+  quizId  Int
+  isSoftDelete Boolean @default(false)
+}
+
+model QuestionOption {
+  id          Int     @id @default(autoincrement())
+  option      String
+  question    Question    @relation(fields: [questionId], references: [id])
+  questionId  Int
+  isSoftDelete Boolean @default(false)
+}
+
+model QuestionAnswer {
+  id        Int     @id @default(autoincrement())
+  answer String
+  question    Question    @relation(fields: [questionId], references: [id])
+  questionId  Int
+  isSoftDelete Boolean @default(false)
+}
